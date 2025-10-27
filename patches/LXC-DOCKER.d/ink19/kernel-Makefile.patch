@@ -1,0 +1,17 @@
+diff --git a/kernel/Makefile b/kernel/Makefile
+index 63f68f0f0a4a..06306737905a 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -121,11 +121,11 @@ $(obj)/configs.o: $(obj)/config_data.h
+ targets += config_data.gz
+ 
+ ifneq ($(CONFIG_MACH_XIAOMI_CEPHEUS),y)
+-$(obj)/config_data.gz: arch/arm64/configs/cepheus_stock_defconfig FORCE
++$(obj)/config_data.gz: $(KCONFIG_CONFIG) FORCE
+ endif
+ 
+ ifneq ($(CONFIG_MACH_XIAOMI_RAPHAEL),y)
+-$(obj)/config_data.gz: arch/arm64/configs/raphael_stock_defconfig FORCE
++$(obj)/config_data.gz: $(KCONFIG_CONFIG) FORCE
+ endif
+ 	$(call if_changed,gzip)
