@@ -16,7 +16,7 @@ patches_dir="$GITHUB_WORKSPACE/patches"
 patch_dir="$patches_dir/KernelSU.d/Manual"
 
 # patch_files=($(find $patch_dir -name '*.patch'))  # Automatic
-patch_files=(
+[[ ENABLE_KERNELSU == true ]] && patch_files=(
     # Manually modify the kernel source
     "$patch_dir/fs-exec.patch"
     "$patch_dir/fs-open.d/do_faccessat.diff"
