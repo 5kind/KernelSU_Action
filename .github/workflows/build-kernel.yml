@@ -57,6 +57,10 @@ jobs:
             KSU_EXPECTED_HASH
             REMOVE_UNUSED_PACKAGES
             CUT_PYTHON
+            LXC_DOCKER
+            LXC_PATCH
+            ANDROID_PARANOID_NETWORK_OFF
+            ENABLE_KVM
         )
 
         for CONFIG in "${CONFIG_LIST[@]}"; do
