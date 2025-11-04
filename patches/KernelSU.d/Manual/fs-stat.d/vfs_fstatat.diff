@@ -2,7 +2,7 @@ diff --git a/fs/stat.c b/fs/stat.c
 index 068fdbcc9e26..5348b7bb9db2 100644
 --- a/fs/stat.c
 +++ b/fs/stat.c
-@@ -87,6 +87,8 @@ int vfs_fstat(unsigned int fd, struct kstat *stat)
+@@ -87,6 +87,10 @@ int vfs_fstat(unsigned int fd, struct kstat *stat)
  }
  EXPORT_SYMBOL(vfs_fstat);
  
@@ -13,7 +13,7 @@ index 068fdbcc9e26..5348b7bb9db2 100644
  int vfs_fstatat(int dfd, const char __user *filename, struct kstat *stat,
  		int flag)
  {
-@@ -94,6 +96,8 @@ int vfs_fstatat(int dfd, const char __user *filename, struct kstat *stat,
+@@ -94,6 +98,10 @@ int vfs_fstatat(int dfd, const char __user *filename, struct kstat *stat,
  	int error = -EINVAL;
  	unsigned int lookup_flags = 0;
 +   #ifdef CONFIG_KSU 

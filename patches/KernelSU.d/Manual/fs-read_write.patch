@@ -2,7 +2,7 @@ diff --git a/fs/read_write.c b/fs/read_write.c
 index 650fc7e0f3a6..55be193913b6 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
-@@ -434,10 +434,14 @@ ssize_t kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
+@@ -434,10 +434,20 @@ ssize_t kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
  }
  EXPORT_SYMBOL(kernel_read);
 

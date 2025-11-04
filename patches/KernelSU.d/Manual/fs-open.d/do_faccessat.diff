@@ -2,7 +2,7 @@ diff --git a/fs/open.c b/fs/open.c
 index 05036d819197..965b84d486b8 100644
 --- a/fs/open.c
 +++ b/fs/open.c
-@@ -348,6 +348,8 @@ SYSCALL_DEFINE4(fallocate, int, fd, int, mode, loff_t, offset, loff_t, len)
+@@ -348,6 +348,10 @@ SYSCALL_DEFINE4(fallocate, int, fd, int, mode, loff_t, offset, loff_t, len)
  	return ksys_fallocate(fd, mode, offset, len);
  }
 
@@ -13,7 +13,7 @@ index 05036d819197..965b84d486b8 100644
  /*
   * access() needs to use the real uid/gid, not the effective uid/gid.
   * We do this by temporarily clearing all FS-related capabilities and
-@@ -355,6 +357,7 @@ SYSCALL_DEFINE4(fallocate, int, fd, int, mode, loff_t, offset, loff_t, len)
+@@ -355,11 +359,14 @@ SYSCALL_DEFINE4(fallocate, int, fd, int, mode, loff_t, offset, loff_t, len)
   */
  long do_faccessat(int dfd, const char __user *filename, int mode)
  {

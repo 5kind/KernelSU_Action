@@ -2,7 +2,7 @@ diff --git a/fs/open.c b/fs/open.c
 index 2ff887661237..e758d7db7663 100644
 --- a/fs/open.c
 +++ b/fs/open.c
-@@ -355,6 +355,9 @@ SYSCALL_DEFINE4(fallocate, int, fd, int, mode, loff_t, offset, loff_t, len)
+@@ -355,6 +355,11 @@ SYSCALL_DEFINE4(fallocate, int, fd, int, mode, loff_t, offset, loff_t, len)
  	return error;
  }
 
@@ -14,7 +14,7 @@ index 2ff887661237..e758d7db7663 100644
  /*
   * access() needs to use the real uid/gid, not the effective uid/gid.
   * We do this by temporarily clearing all FS-related capabilities and
-@@ -370,6 +373,8 @@ SYSCALL_DEFINE3(faccessat, int, dfd, const char __user *, filename, int, mode)
+@@ -370,6 +375,10 @@ SYSCALL_DEFINE3(faccessat, int, dfd, const char __user *, filename, int, mode)
  	int res;
  	unsigned int lookup_flags = LOOKUP_FOLLOW;
 +   #ifdef CONFIG_KSU

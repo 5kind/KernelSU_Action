@@ -2,7 +2,7 @@ diff --git a/fs/stat.c b/fs/stat.c
 index 376543199b5a..82adcef03ecc 100644
 --- a/fs/stat.c
 +++ b/fs/stat.c
-@@ -148,6 +148,8 @@ int vfs_statx_fd(unsigned int fd, struct kstat *stat,
+@@ -148,6 +148,10 @@ int vfs_statx_fd(unsigned int fd, struct kstat *stat,
  }
  EXPORT_SYMBOL(vfs_statx_fd);
 
@@ -13,7 +13,7 @@ index 376543199b5a..82adcef03ecc 100644
  /**
   * vfs_statx - Get basic and extra attributes by filename
   * @dfd: A file descriptor representing the base dir for a relative filename
-@@ -170,6 +172,7 @@ int vfs_statx(int dfd, const char __user *filename, int flags,
+@@ -170,6 +174,9 @@ int vfs_statx(int dfd, const char __user *filename, int flags,
  	int error = -EINVAL;
  	unsigned int lookup_flags = LOOKUP_FOLLOW | LOOKUP_AUTOMOUNT;
 
