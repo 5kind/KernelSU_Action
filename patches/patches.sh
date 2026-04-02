@@ -11,6 +11,12 @@
 
 # exit 0    # Disable patches script.
 
+patches_script="$GITHUB_WORKSPACE/patches/patches-gki.sh"
+if [ "$(realpath "$0")" != $(realpath "$patches_script") ]; then
+    echo "Hand over control to patches script: $patches_script"
+    exec bash "$patches_script" "$@"
+fi
+
 patches_dir="$GITHUB_WORKSPACE/patches"
 # patch_dir="$patches_dir/KernelSU" # Automatic
 patch_dir="$patches_dir/KernelSU.d/Manual"
