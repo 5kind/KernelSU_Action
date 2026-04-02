@@ -84,8 +84,28 @@ jobs:
 
       - uses: actions/checkout@v5
         with:
-          path: KernelSU
           fetch-depth: 0
+      - name: Prepare Configuration
+        run: |
+          CONFIG_ENV=$(grep -w "CONFIG_ENV" config.env | head -n 1 | cut -d "=" -f 2)
+          CONFIG_LIST=(
+            ENABLE_KERNELSU
+            KERNELSU_TAG
+            KSU_EXPECTED_SIZE
+            KSU_EXPECTED_HASH
+            LXC_DOCKER
+            LXC_PATCH
+            ANDROID_PARANOID_NETWORK_OFF
+            ENABLE_KVM
+          )
+
+          for CONFIG in "${CONFIG_LIST[@]}"; do
+              if [[ "$CONFIG" == "EXTRA_CMDS" || "$CONFIG" == "CUSTOM_CMDS" ]]; then
+                  echo "$CONFIG=$(grep -w "$CONFIG" "$CONFIG_ENV" | head -n 1 | cut -d ":" -f 2)" >> $GITHUB_ENV
+              else
+                  echo "$CONFIG=$(grep -w "$CONFIG" "$CONFIG_ENV" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
+              fi
+          done
 
       - name: Setup need_upload
         id: need_upload
@@ -116,10 +136,13 @@ jobs:
           df -h
 
       - name: Setup KernelSU
+        if: ${{ env.ENABLE_KERNELSU == 'true' }}
         env:
           PATCH_PATH: ${{ inputs.patch_path }}
           IS_DEBUG_KERNEL: ${{ inputs.debug }}
         run: |
+          cd $GITHUB_WORKSPACE
+          git clone https://github.com/tiann/KernelSU --branch $KERNELSU_TAG
           cd $GITHUB_WORKSPACE/android-kernel
           echo "[+] KernelSU setup"
           GKI_ROOT=$(pwd)
@@ -148,7 +171,13 @@ jobs:
           repo status
           echo "[+] KernelSU setup done."
 
+      - name: Setup Configuration for Kernel
+        run: |
+          cd $GITHUB_WORKSPACE/android-kernel/common
+          ARCH=arm64 KERNEL_CONFIG=gki_defconfig bash $GITHUB_WORKSPACE/patches/patches.sh
+    
       - name: Symbol magic
+        if: ${{ env.ENABLE_KERNELSU == 'true' }}
         run: |
           echo "[+] Export all symbol from abi_gki_aarch64.xml"
           COMMON_ROOT=$GITHUB_WORKSPACE/android-kernel/common
@@ -231,15 +260,15 @@ jobs:
           rm common/android/abi_gki_protected_exports_* || echo "No protected exports!"
           git config --global user.email "bot@kernelsu.org"
           git config --global user.name "KernelSUBot"
-          cd common/ && git add -A && git commit -a -m "Add KernelSU"
+          cd common/ && git add -A && git commit -a -m "Add KernelSU" || echo "Nothing to commit"
           repo status
 
       - name: Build Kernel/LKM
         working-directory: android-kernel
         run: |
-          if [ ! -z ${{ vars.EXPECTED_SIZE }} ] && [ ! -z ${{ vars.EXPECTED_HASH }} ]; then
-            export KSU_EXPECTED_SIZE=${{ vars.EXPECTED_SIZE }}
-            export KSU_EXPECTED_HASH=${{ vars.EXPECTED_HASH }}
+          if [ ! -z ${{ env.KSU_EXPECTED_SIZE }} ] && [ ! -z ${{ env.KSU_EXPECTED_HASH }} ]; then
+            export KSU_EXPECTED_SIZE=${{ env.KSU_EXPECTED_SIZE }}
+            export KSU_EXPECTED_HASH=${{ env.EXPECTED_HASH }}
           fi
           if [ -e build/build.sh ]; then
             LTO=thin BUILD_CONFIG=common/build.config.gki.aarch64 build/build.sh CC="/usr/bin/ccache clang"
