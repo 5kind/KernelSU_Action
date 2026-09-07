@@ -361,6 +361,140 @@ kpm_patch_image() {
 	endgroup
 }
 
+# ================================================================= Stock Config
+
+make_args() {
+	printf '%s' "O=out ARCH=${ARCH}"
+	[ -n "${CUSTOM_CMDS:-}" ] && printf ' %s' "$CUSTOM_CMDS"
+	[ -n "${EXTRA_CMDS:-}"  ] && printf ' %s' "$EXTRA_CMDS"
+	[ -n "${GCC_64:-}"      ] && printf ' %s' "$GCC_64"
+	[ -n "${GCC_32:-}"      ] && printf ' %s' "$GCC_32"
+	if is_true "${USE_LLVM:-false}"; then
+		printf ' LLVM=1 LLVM_IAS=1'
+		[ -n "${GCC_64:-}" ] || printf ' CROSS_COMPILE=aarch64-linux-gnu-'
+	fi
+}
+
+stock_apply() {
+	local stockconfig=arch/${ARCH}/configs/stock_${KERNEL_CONFIG}
+	group "Applying stock config"
+	# Set same env vars as build.sh
+	export PATH="${CLANG_PATH:-}:${PATH}"
+	export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-Github-Action}
+	export KBUILD_BUILD_USER=${KBUILD_BUILD_USER:-kernelsu-action}
+	unset DISABLE_LTO
+
+	local args
+	args=$(make_args)
+	cd "$KERNEL_DIR"
+	if [ ! -f "$stockconfig" ]; then
+		info "make ${args} ${KERNEL_CONFIG} as stock config"
+		make -j"$(nproc --all)" CC=clang $args "${KERNEL_CONFIG}" \
+			|| die "defconfig generation failed"
+		mv -v "out/.config" "$stockconfig"
+	else
+		info "stock config ${stockconfig} already exists, skipping generation"
+	fi
+	info "Use ${stockconfig} as /proc/config.gz to bypass VINTF checks"
+	sed -i "s|^\(\$(obj)/config_data:\) \$(KCONFIG_CONFIG) FORCE|\1 ${stockconfig} FORCE|" kernel/Makefile
+	endgroup
+}
+
+# ================================================================== Droidspace
+
+# Droidspace's patches are stored in ${DRIODSPACE_REPO}/Documentation/resources/kernel-patches:
+# - non-GKI: Applies to: Kernel 4.19 & below
+# - GKI/below-kernel-6.12: Applies to: Kernel 5.4 ~ 6.6
+# - GKI/kernel-6.12: Applies to: Kernel 6.12
+# Use return value as GKI flag.
+droidspace_patch_dir() {
+	case "$1" in
+		3.*|4.*)
+			printf '%s' "non-GKI"
+			return 0 ;;
+		5.*|6.1|6.6)
+			printf '%s' "GKI/below-kernel-6.12"
+			return 1 ;;
+		6.12)
+			printf '%s' "GKI/kernel-6.12"
+			return 2 ;;
+		*)
+			die "unsupported kernel version for Droidspace: $1" ;;
+	esac
+}
+
+droidspace_apply() {
+    local kver
+	kver=$(kernel_version "$KERNEL_DIR")
+	local dir=${WORKSPACE}/Droidspace
+	if [ ! -d "$dir" ]; then
+		retry 3 git clone -q --depth=1 ${DRIODSPACE_REPO} "$dir" \
+			|| die "failed to clone Droidspace"
+	fi
+	group "Applying Droidspace (kernel ${kver})"
+	cd "$KERNEL_DIR"
+	local gki_flag=0
+	droidspace_patch_dir "$kver" >/dev/null 2>&1 || gki_flag=$?
+	if [ "$gki_flag" -eq 1 ]; then
+		# For GKI below kernel 6.12, apply specified patches from Droidspace.
+		apply_patch "${dir}/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/${KABI_PATCH}" 1 || \
+		warn "Droidspace patch ${KABI_PATCH} did not apply cleanly, continuing"
+		apply_patch "${dir}/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/002.5.10_or_lower_use_android_abi_padding_for_posix_mqueue.patch" 1 || \
+		warn "Droidspace POSIX_MQUEUE kABI patch did not apply cleanly, continuing"
+	else
+		for patch in "${dir}/Documentation/resources/kernel-patches/$(droidspace_patch_dir "$kver")"/*.patch; do
+			apply_patch "$patch" 1 || warn "Droidspace patch $patch did not apply cleanly, continuing"
+		done
+	fi
+	local defconfig=arch/${ARCH}/configs/${KERNEL_CONFIG}
+	# For all kernel versions: IPC, Namespaces, Devtmpfs, NAT, fix unsafe procfs, UFW, Fail2ban, tmpfs acls,
+	kconf_set_many "$defconfig" \
+		CONFIG_SYSVIPC=y CONFIG_POSIX_MQUEUE=y \
+		CONFIG_PID_NS=y	CONFIG_IPC_NS=y \
+		CONFIG_DEVTMPFS=y CONFIG_NETFILTER_XT_MATCH_ADDRTYPE=y CONFIG_USER_NS=y\
+		CONFIG_NETFILTER_XT_TARGET_REJECT=y CONFIG_NETFILTER_XT_TARGET_LOG=y CONFIG_NETFILTER_XT_MATCH_RECENT=y \
+		CONFIG_IP_SET=y CONFIG_IP_SET_HASH_IP=y CONFIG_IP_SET_HASH_NET=y CONFIG_NETFILTER_XT_SET=y \
+		CONFIG_TMPFS_POSIX_ACL=y CONFIG_TMPFS_XATTR=y
+	droidspace_patch_dir "$kver" >/dev/null 2>&1 &&
+	# For non-GKI: Seccomp, Cgroups, FW-Loader, Network, Compatibility, Firewall
+	kconf_set_many "$defconfig" \
+		CONFIG_SYSCTL=y \
+		CONFIG_NAMESPACES=y CONFIG_UTS_NS=y \
+		CONFIG_SECCOMP=y CONFIG_SECCOMP_FILTER=y \
+		CONFIG_CGROUPS=y CONFIG_CGROUP_DEVICE=y CONFIG_CGROUP_PIDS=y CONFIG_MEMCG=y \
+		CONFIG_CGROUP_SCHED=y CONFIG_FAIR_GROUP_SCHED=y CONFIG_CGROUP_FREEZER=y CONFIG_CGROUP_NET_PRIO=y \
+		CONFIG_OVERLAY_FS=y \
+		CONFIG_FW_LOADER=y CONFIG_FW_LOADER_USER_HELPER=y CONFIG_FW_LOADER_COMPRESS=y \
+		CONFIG_NET_NS=y CONFIG_VETH=y CONFIG_BRIDGE=y CONFIG_NETFILTER=y CONFIG_BRIDGE_NETFILTER=y CONFIG_NETFILTER_ADVANCED=y \
+		CONFIG_NF_CONNTRACK=y CONFIG_IP_NF_IPTABLES=y CONFIG_IP_NF_FILTER=y CONFIG_NF_NAT=y CONFIG_NF_TABLES=y \
+		CONFIG_IP_NF_TARGET_MASQUERADE=y CONFIG_NETFILTER_XT_TARGET_MASQUERADE=y CONFIG_NETFILTER_XT_TARGET_TCPMSS=y \
+		CONFIG_NF_CONNTRACK_NETLINK=y CONFIG_NF_NAT_REDIRECT=y CONFIG_IP_ADVANCED_ROUTER=y CONFIG_IP_MULTIPLE_TABLES=y \
+		CONFIG_ANDROID_PARANOID_NETWORK=n \
+		CONFIG_NF_CONNTRACK_IPV4=y CONFIG_NF_NAT_IPV4=y CONFIG_IP_NF_NAT=y \
+		CONFIG_NETFILTER_XT_MATCH_COMMENT=y CONFIG_NETFILTER_XT_MATCH_STATE=y CONFIG_NETFILTER_XT_MATCH_CONNTRACK=y \
+		CONFIG_NETFILTER_XT_MATCH_MULTIPORT=y CONFIG_NETFILTER_XT_MATCH_HL=y CONFIG_IP_NF_TARGET_REJECT=y CONFIG_IP_NF_TARGET_ULOG=y \
+		CONFIG_NETFILTER_XT_MATCH_LIMIT=y CONFIG_NETFILTER_XT_MATCH_HASHLIMIT=y CONFIG_NETFILTER_XT_MATCH_OWNER=y \
+		CONFIG_NETFILTER_XT_MATCH_PKTTYPE=y CONFIG_NETFILTER_XT_MATCH_MARK=y CONFIG_NETFILTER_XT_TARGET_MARK=y \
+		CONFIG_NETFILTER_NETLINK_QUEUE=y CONFIG_NETFILTER_NETLINK_LOG=y CONFIG_NETFILTER_XT_TARGET_NFLOG=y
+	endgroup
+}
+
+# =============================================================== Custom Patches
+
+# Also modifies ${KERNEL_DIR}/scripts/setlocalversion to remove "-dirty"
+custom_apply() {
+	cd "$KERNEL_DIR"
+	group "Applying custom patches"
+	for patch in ${REPO_ROOT}/patches/*.patch; do
+		[ -f "$patch" ] || continue
+		apply_patch "$patch" 1 || warn "Custom patch $patch did not apply cleanly, continuing"
+	done
+	if [ -f "${KERNEL_DIR}/scripts/setlocalversion" ]; then
+		sed -i 's/echo "\$res"/echo "\$res"/; s/-dirty//g' "${KERNEL_DIR}/scripts/setlocalversion"
+	fi
+	endgroup
+}
+
 # --------------------------------------------------------------------- main ---
 
 if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
@@ -370,6 +504,8 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
 		hide_stuff)   hide_stuff_apply ;;
 		hooks)        hooks_patch_apply ;;
 		kpm)          kpm_patch_image "$2" ;;
+		stockconfig)  stock_apply ;;
+		droidspace)   droidspace_apply ;;
 		all)
 			# Order matters and this is the tested one (4.19 + SukiSU builtin
 			# + SUSFS 1.5.5, no rejects):
@@ -387,6 +523,9 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
 
 			if is_true "${ENABLE_SUSFS:-false}";      then susfs_apply;      fi
 			if is_true "${ENABLE_HIDE_STUFF:-false}"; then hide_stuff_apply; fi
+			if is_true "${ENABLE_STOCKCONFIG:-false}";	then stock_apply;	 fi
+			if is_true "${ENABLE_DROIDSPACE:-false}"; then droidspace_apply; fi
+			if is_true "${ENABLE_CUSTOM_PATCHES:-false}"; then custom_apply; fi
 			;;
 		*) die "unknown patch step '$1'" ;;
 	esac
