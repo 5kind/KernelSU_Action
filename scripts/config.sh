@@ -68,6 +68,7 @@ declare -A DEFAULTS=(
 	[KABI_PATCH]="001.GKI-below-6.12-fix_sysvipc_kabi_6_7_8.patch"
 	[DRIODSPACE_REPO]="https://github.com/ravindu644/Droidspaces-OSS.git"
 	[ENABLE_CUSTOM_PATCHES]="false"
+	[ENABLE_STOCKCONFIG]="false"
 
 	# Kconfig tweaks
 	[ADD_KPROBES_CONFIG]="false"

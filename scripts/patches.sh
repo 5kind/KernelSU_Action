@@ -361,6 +361,45 @@ kpm_patch_image() {
 	endgroup
 }
 
+# ================================================================= Stock Config
+
+make_args() {
+	printf '%s' "O=out ARCH=${ARCH}"
+	[ -n "${CUSTOM_CMDS:-}" ] && printf ' %s' "$CUSTOM_CMDS"
+	[ -n "${EXTRA_CMDS:-}"  ] && printf ' %s' "$EXTRA_CMDS"
+	[ -n "${GCC_64:-}"      ] && printf ' %s' "$GCC_64"
+	[ -n "${GCC_32:-}"      ] && printf ' %s' "$GCC_32"
+	if is_true "${USE_LLVM:-false}"; then
+		printf ' LLVM=1 LLVM_IAS=1'
+		[ -n "${GCC_64:-}" ] || printf ' CROSS_COMPILE=aarch64-linux-gnu-'
+	fi
+}
+
+stock_apply() {
+	local stockconfig=arch/${ARCH}/configs/stock_${KERNEL_CONFIG}
+	group "Applying stock config"
+	# Set same env vars as build.sh
+	export PATH="${CLANG_PATH:-}:${PATH}"
+	export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-Github-Action}
+	export KBUILD_BUILD_USER=${KBUILD_BUILD_USER:-kernelsu-action}
+	unset DISABLE_LTO
+
+	local args
+	args=$(make_args)
+	cd "$KERNEL_DIR"
+	if [ ! -f "$stockconfig" ]; then
+		info "make ${args} ${KERNEL_CONFIG} as stock config"
+		make -j"$(nproc --all)" CC=clang $args "${KERNEL_CONFIG}" \
+			|| die "defconfig generation failed"
+		mv -v "out/.config" "$stockconfig"
+	else
+		info "stock config ${stockconfig} already exists, skipping generation"
+	fi
+	info "Use ${stockconfig} as /proc/config.gz to bypass VINTF checks"
+	sed -i "s|^\(\$(obj)/config_data:\) \$(KCONFIG_CONFIG) FORCE|\1 ${stockconfig} FORCE|" kernel/Makefile
+	endgroup
+}
+
 # ================================================================== Droidspace
 
 # Droidspace's patches are stored in ${DRIODSPACE_REPO}/Documentation/resources/kernel-patches:
@@ -395,7 +434,7 @@ droidspace_apply() {
 	group "Applying Droidspace (kernel ${kver})"
 	cd "$KERNEL_DIR"
 	local gki_flag=0
-	droidspace_patch_dir "$kver" 2>&1 >/dev/null || gki_flag=$?
+	droidspace_patch_dir "$kver" >/dev/null 2>&1 || gki_flag=$?
 	if [ "$gki_flag" -eq 1 ]; then
 		# For GKI below kernel 6.12, apply specified patches from Droidspace.
 		apply_patch "${dir}/Documentation/resources/kernel-patches/GKI/below-kernel-6.12/${KABI_PATCH}" 1 || \
@@ -416,7 +455,7 @@ droidspace_apply() {
 		CONFIG_NETFILTER_XT_TARGET_REJECT=y CONFIG_NETFILTER_XT_TARGET_LOG=y CONFIG_NETFILTER_XT_MATCH_RECENT=y \
 		CONFIG_IP_SET=y CONFIG_IP_SET_HASH_IP=y CONFIG_IP_SET_HASH_NET=y CONFIG_NETFILTER_XT_SET=y \
 		CONFIG_TMPFS_POSIX_ACL=y CONFIG_TMPFS_XATTR=y
-	droidspace_patch_dir "$kver" 2>&1 >/dev/null &&
+	droidspace_patch_dir "$kver" >/dev/null 2>&1 &&
 	# For non-GKI: Seccomp, Cgroups, FW-Loader, Network, Compatibility, Firewall
 	kconf_set_many "$defconfig" \
 		CONFIG_SYSCTL=y \
@@ -465,6 +504,7 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
 		hide_stuff)   hide_stuff_apply ;;
 		hooks)        hooks_patch_apply ;;
 		kpm)          kpm_patch_image "$2" ;;
+		stockconfig)  stock_apply ;;
 		droidspace)   droidspace_apply ;;
 		all)
 			# Order matters and this is the tested one (4.19 + SukiSU builtin
@@ -483,6 +523,7 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
 
 			if is_true "${ENABLE_SUSFS:-false}";      then susfs_apply;      fi
 			if is_true "${ENABLE_HIDE_STUFF:-false}"; then hide_stuff_apply; fi
+			if is_true "${ENABLE_STOCKCONFIG:-false}";	then stock_apply;	 fi
 			if is_true "${ENABLE_DROIDSPACE:-false}"; then droidspace_apply; fi
 			if is_true "${ENABLE_CUSTOM_PATCHES:-false}"; then custom_apply; fi
 			;;
