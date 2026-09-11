@@ -1,0 +1,405 @@
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-g7a-36-02-0c-dsc-video.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-g7a-36-02-0c-dsc-video.dtsi
+index 5b121d717bbf..e17ca74147cd 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-g7a-36-02-0c-dsc-video.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-g7a-36-02-0c-dsc-video.dtsi
+@@ -53,13 +53,13 @@
+ 			17000 15500 30000 8000 3000>;
+ 		qcom,mdss-dsi-panel-peak-brightness = <4200000>;
+ 		qcom,mdss-dsi-panel-blackness-level = <3230>;
+-		qcom,mdss-dsi-qsync-min-refresh-rate = <60>;
++		//qcom,mdss-dsi-qsync-min-refresh-rate = <60>;
+ 
+ 		qcom,mdss-dsi-pan-enable-dynamic-fps;
+-		// qcom,mdss-dsi-pan-enable-smart-fps;
++		qcom,mdss-dsi-pan-enable-smart-fps;
+ 		qcom,mdss-dsi-pan-fps-update =
+ 			"dfps_immediate_porch_mode_vfp";
+-		qcom,dsi-supported-dfps-list = <120 90 60>;
++		qcom,dsi-supported-dfps-list = <120 90 60 50 30>;
+ 
+ 		qcom,mdss-dsi-display-timings {
+ 			timing@0{
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-g7a-37-02-0a-dsc-video.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-g7a-37-02-0a-dsc-video.dtsi
+index 8e0ccb19270c..2c1149725fe7 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-g7a-37-02-0a-dsc-video.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-g7a-37-02-0a-dsc-video.dtsi
+@@ -53,13 +53,13 @@
+ 			17000 15500 30000 8000 3000>;
+ 		qcom,mdss-dsi-panel-peak-brightness = <4200000>;
+ 		qcom,mdss-dsi-panel-blackness-level = <3230>;
+-		qcom,mdss-dsi-qsync-min-refresh-rate = <60>;
++		//qcom,mdss-dsi-qsync-min-refresh-rate = <60>;
+ 
+ 		qcom,mdss-dsi-pan-enable-dynamic-fps;
+-		// qcom,mdss-dsi-pan-enable-smart-fps;
++		qcom,mdss-dsi-pan-enable-smart-fps;
+ 		qcom,mdss-dsi-pan-fps-update =
+ 			"dfps_immediate_porch_mode_vfp";
+-		qcom,dsi-supported-dfps-list = <120 90 60>;
++		qcom,dsi-supported-dfps-list = <120 90 60 50 30>;
+ 
+ 		qcom,mdss-dsi-display-timings {
+ 			timing@0{
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-g7a-37-02-0b-dsc-video.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-g7a-37-02-0b-dsc-video.dtsi
+index 5a593a47bb8c..ffcd82e2904b 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-g7a-37-02-0b-dsc-video.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-g7a-37-02-0b-dsc-video.dtsi
+@@ -53,13 +53,13 @@
+ 			17000 15500 30000 8000 3000>;
+ 		qcom,mdss-dsi-panel-peak-brightness = <4200000>;
+ 		qcom,mdss-dsi-panel-blackness-level = <3230>;
+-		qcom,mdss-dsi-qsync-min-refresh-rate = <60>;
++		//qcom,mdss-dsi-qsync-min-refresh-rate = <60>;
+ 
+ 		qcom,mdss-dsi-pan-enable-dynamic-fps;
+-		// qcom,mdss-dsi-pan-enable-smart-fps;
++		qcom,mdss-dsi-pan-enable-smart-fps;
+ 		qcom,mdss-dsi-pan-fps-update =
+ 			"dfps_immediate_porch_mode_vfp";
+-		qcom,dsi-supported-dfps-list = <120 90 60>;
++		qcom,dsi-supported-dfps-list = <120 90 60 50 30>;
+ 
+ 		qcom,mdss-dsi-display-timings {
+ 			timing@0{
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j11-38-08-0a-fhd-cmd.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j11-38-08-0a-fhd-cmd.dtsi
+index 2e82f30a1031..41a284a516f2 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j11-38-08-0a-fhd-cmd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j11-38-08-0a-fhd-cmd.dtsi
+@@ -23,8 +23,8 @@
+ 		qcom,mdss-dsi-dma-trigger = "trigger_sw";
+ 		qcom,mdss-dsi-mdp-trigger = "none";
+ 		qcom,mdss-dsi-reset-sequence = <0 1>, <1 10>;
+-		qcom,mdss-pan-physical-width-dimension = <70>;
+-		qcom,mdss-pan-physical-height-dimension = <155>;
++		qcom,mdss-pan-physical-width-dimension = <695>;
++		qcom,mdss-pan-physical-height-dimension = <1545>;
+ 
+ 		qcom,mdss-dsi-te-pin-select = <1>;
+ 		qcom,mdss-dsi-wr-mem-start = <0x2c>;
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j1s-42-02-0a-dsc-cmd.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j1s-42-02-0a-dsc-cmd.dtsi
+index 162e76438d4a..49a3232605dc 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j1s-42-02-0a-dsc-cmd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j1s-42-02-0a-dsc-cmd.dtsi
+@@ -23,8 +23,8 @@
+ 		qcom,mdss-dsi-dma-trigger = "trigger_sw";
+ 		qcom,mdss-dsi-mdp-trigger = "none";
+ 		qcom,mdss-dsi-reset-sequence = <1 1>, <0 1>, <1 10>;
+-		qcom,mdss-pan-physical-width-dimension = <71>;
+-		qcom,mdss-pan-physical-height-dimension = <154>;
++		qcom,mdss-pan-physical-width-dimension = <710>;
++		qcom,mdss-pan-physical-height-dimension = <1537>;
+ 		qcom,mdss-dsi-te-pin-select = <1>;
+ 		qcom,mdss-dsi-wr-mem-start = <0x2c>;
+ 		qcom,mdss-dsi-wr-mem-continue = <0x3c>;
+@@ -366,8 +366,8 @@
+ 	mi,mdss-panel-delay-after-fod-hbm-off;
+ 	mi,mdss-panel-delay-after-fod-hbm-on;
+ 
+-	// mi,mdss-dsi-pan-enable-smart-fps;
+-	// mi,mdss-dsi-smart-fps-max_framerate = <120>;
++	mi,mdss-dsi-pan-enable-smart-fps;
++	mi,mdss-dsi-smart-fps-max_framerate = <120>;
+ 	mi,mdss-dsi-panel-hbm-brightness = <1>;
+ 	mi,mdss-dsi-panel-max-brightness-clone = <6143>;
+ 	mi,mdss-dsi-dimlayer-brightness-alpha-lut-item-count = <21>;
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j1s-42-02-0a-mp-dsc-cmd.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j1s-42-02-0a-mp-dsc-cmd.dtsi
+index 98054648b6c1..800e12b70ee9 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j1s-42-02-0a-mp-dsc-cmd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j1s-42-02-0a-mp-dsc-cmd.dtsi
+@@ -23,8 +23,8 @@
+ 		qcom,mdss-dsi-dma-trigger = "trigger_sw";
+ 		qcom,mdss-dsi-mdp-trigger = "none";
+ 		qcom,mdss-dsi-reset-sequence = <1 1>, <0 1>, <1 10>;
+-		qcom,mdss-pan-physical-width-dimension = <71>;
+-		qcom,mdss-pan-physical-height-dimension = <154>;
++		qcom,mdss-pan-physical-width-dimension = <710>;
++		qcom,mdss-pan-physical-height-dimension = <1537>;
+ 		qcom,mdss-dsi-te-pin-select = <1>;
+ 		qcom,mdss-dsi-wr-mem-start = <0x2c>;
+ 		qcom,mdss-dsi-wr-mem-continue = <0x3c>;
+@@ -359,8 +359,8 @@
+ 	mi,mdss-panel-delay-after-fod-hbm-off;
+ 	mi,mdss-panel-delay-after-fod-hbm-on;
+ 
+-	// mi,mdss-dsi-pan-enable-smart-fps;
+-	// mi,mdss-dsi-smart-fps-max_framerate = <120>;
++	mi,mdss-dsi-pan-enable-smart-fps;
++	mi,mdss-dsi-smart-fps-max_framerate = <120>;
+ 	mi,mdss-dsi-panel-hbm-brightness = <1>;
+ 	mi,mdss-dsi-panel-max-brightness-clone = <6143>;
+ 	mi,mdss-dsi-dimlayer-brightness-alpha-lut-item-count = <21>;
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j1s-42-02-0a-p1-1-dsc-cmd.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j1s-42-02-0a-p1-1-dsc-cmd.dtsi
+index 76d6bebad73c..9a640e73beb0 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j1s-42-02-0a-p1-1-dsc-cmd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j1s-42-02-0a-p1-1-dsc-cmd.dtsi
+@@ -23,8 +23,8 @@
+ 		qcom,mdss-dsi-dma-trigger = "trigger_sw";
+ 		qcom,mdss-dsi-mdp-trigger = "none";
+ 		qcom,mdss-dsi-reset-sequence = <1 1>, <0 1>, <1 10>;
+-		qcom,mdss-pan-physical-width-dimension = <71>;
+-		qcom,mdss-pan-physical-height-dimension = <154>;
++		qcom,mdss-pan-physical-width-dimension = <710>;
++		qcom,mdss-pan-physical-height-dimension = <1537>;
+ 		qcom,mdss-dsi-te-pin-select = <1>;
+ 		qcom,mdss-dsi-wr-mem-start = <0x2c>;
+ 		qcom,mdss-dsi-wr-mem-continue = <0x3c>;
+@@ -365,8 +365,8 @@
+ 	mi,mdss-panel-delay-after-fod-hbm-off;
+ 	mi,mdss-panel-delay-after-fod-hbm-on;
+ 
+-	// mi,mdss-dsi-pan-enable-smart-fps;
+-	// mi,mdss-dsi-smart-fps-max_framerate = <120>;
++	mi,mdss-dsi-pan-enable-smart-fps;
++	mi,mdss-dsi-smart-fps-max_framerate = <120>;
+ 	mi,mdss-dsi-panel-hbm-brightness = <1>;
+ 	mi,mdss-dsi-panel-max-brightness-clone = <6143>;
+ 	mi,mdss-dsi-dimlayer-brightness-alpha-lut-item-count = <21>;
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-38-0c-0a-dsc-cmd.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-38-0c-0a-dsc-cmd.dtsi
+index b9d595c3421f..3bd11ce33f20 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-38-0c-0a-dsc-cmd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-38-0c-0a-dsc-cmd.dtsi
+@@ -23,8 +23,8 @@
+ 		qcom,mdss-dsi-dma-trigger = "trigger_sw";
+ 		qcom,mdss-dsi-mdp-trigger = "none";
+ 		qcom,mdss-dsi-reset-sequence = <0 1>, <1 6>;
+-		qcom,mdss-pan-physical-width-dimension = <71>;
+-		qcom,mdss-pan-physical-height-dimension = <154>;
++		qcom,mdss-pan-physical-width-dimension = <710>;
++		qcom,mdss-pan-physical-height-dimension = <1537>;
+ 		qcom,mdss-dsi-te-pin-select = <1>;
+ 		qcom,mdss-dsi-wr-mem-start = <0x2c>;
+ 		qcom,mdss-dsi-wr-mem-continue = <0x3c>;
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-42-02-0b-dsc-cmd.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-42-02-0b-dsc-cmd.dtsi
+index 08ca5ae632ab..50351424426d 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-42-02-0b-dsc-cmd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-42-02-0b-dsc-cmd.dtsi
+@@ -23,8 +23,8 @@
+ 		qcom,mdss-dsi-dma-trigger = "trigger_sw";
+ 		qcom,mdss-dsi-mdp-trigger = "none";
+ 		qcom,mdss-dsi-reset-sequence = <1 1>, <0 1>, <1 10>;
+-		qcom,mdss-pan-physical-width-dimension = <71>;
+-		qcom,mdss-pan-physical-height-dimension = <154>;
++		qcom,mdss-pan-physical-width-dimension = <710>;
++		qcom,mdss-pan-physical-height-dimension = <1537>;
+ 		qcom,mdss-dsi-te-pin-select = <1>;
+ 		qcom,mdss-dsi-wr-mem-start = <0x2c>;
+ 		qcom,mdss-dsi-wr-mem-continue = <0x3c>;
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-mp-42-02-0b-dsc-cmd.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-mp-42-02-0b-dsc-cmd.dtsi
+index 4f5d5709420e..4b7fc9319c70 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-mp-42-02-0b-dsc-cmd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-mp-42-02-0b-dsc-cmd.dtsi
+@@ -23,8 +23,8 @@
+ 		qcom,mdss-dsi-dma-trigger = "trigger_sw";
+ 		qcom,mdss-dsi-mdp-trigger = "none";
+ 		qcom,mdss-dsi-reset-sequence = <1 1>, <0 1>, <1 10>;
+-		qcom,mdss-pan-physical-width-dimension = <71>;
+-		qcom,mdss-pan-physical-height-dimension = <154>;
++		qcom,mdss-pan-physical-width-dimension = <710>;
++		qcom,mdss-pan-physical-height-dimension = <1537>;
+ 		qcom,mdss-dsi-te-pin-select = <1>;
+ 		qcom,mdss-dsi-wr-mem-start = <0x2c>;
+ 		qcom,mdss-dsi-wr-mem-continue = <0x3c>;
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-p1-42-02-0b-dsc-cmd.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-p1-42-02-0b-dsc-cmd.dtsi
+index 34fd786b395f..89dbb981aeb3 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-p1-42-02-0b-dsc-cmd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-p1-42-02-0b-dsc-cmd.dtsi
+@@ -23,8 +23,8 @@
+ 		qcom,mdss-dsi-dma-trigger = "trigger_sw";
+ 		qcom,mdss-dsi-mdp-trigger = "none";
+ 		qcom,mdss-dsi-reset-sequence = <1 1>, <0 1>, <1 10>;
+-		qcom,mdss-pan-physical-width-dimension = <71>;
+-		qcom,mdss-pan-physical-height-dimension = <154>;
++		qcom,mdss-pan-physical-width-dimension = <710>;
++		qcom,mdss-pan-physical-height-dimension = <1537>;
+ 		qcom,mdss-dsi-te-pin-select = <1>;
+ 		qcom,mdss-dsi-wr-mem-start = <0x2c>;
+ 		qcom,mdss-dsi-wr-mem-continue = <0x3c>;
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-p2-1-38-0c-0a-dsc-cmd.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-p2-1-38-0c-0a-dsc-cmd.dtsi
+index dc49c84dd367..94fa1ed947ee 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-p2-1-38-0c-0a-dsc-cmd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-p2-1-38-0c-0a-dsc-cmd.dtsi
+@@ -23,8 +23,8 @@
+ 		qcom,mdss-dsi-dma-trigger = "trigger_sw";
+ 		qcom,mdss-dsi-mdp-trigger = "none";
+ 		qcom,mdss-dsi-reset-sequence = <0 1>, <1 6>;
+-		qcom,mdss-pan-physical-width-dimension = <71>;
+-		qcom,mdss-pan-physical-height-dimension = <154>;
++		qcom,mdss-pan-physical-width-dimension = <710>;
++		qcom,mdss-pan-physical-height-dimension = <1537>;
+ 		qcom,mdss-dsi-te-pin-select = <1>;
+ 		qcom,mdss-dsi-wr-mem-start = <0x2c>;
+ 		qcom,mdss-dsi-wr-mem-continue = <0x3c>;
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-p2-1-42-02-0b-dsc-cmd.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-p2-1-42-02-0b-dsc-cmd.dtsi
+index 0842f1085d8d..bd0ee8bbd201 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-p2-1-42-02-0b-dsc-cmd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2-p2-1-42-02-0b-dsc-cmd.dtsi
+@@ -23,8 +23,8 @@
+ 		qcom,mdss-dsi-dma-trigger = "trigger_sw";
+ 		qcom,mdss-dsi-mdp-trigger = "none";
+ 		qcom,mdss-dsi-reset-sequence = <1 1>, <0 1>, <1 10>;
+-		qcom,mdss-pan-physical-width-dimension = <71>;
+-		qcom,mdss-pan-physical-height-dimension = <154>;
++		qcom,mdss-pan-physical-width-dimension = <710>;
++		qcom,mdss-pan-physical-height-dimension = <1537>;
+ 		qcom,mdss-dsi-te-pin-select = <1>;
+ 		qcom,mdss-dsi-wr-mem-start = <0x2c>;
+ 		qcom,mdss-dsi-wr-mem-continue = <0x3c>;
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2s-mp-42-02-0a-dsc-cmd.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2s-mp-42-02-0a-dsc-cmd.dtsi
+index 94cbf4204689..fba7667f513f 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2s-mp-42-02-0a-dsc-cmd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j2s-mp-42-02-0a-dsc-cmd.dtsi
+@@ -23,8 +23,8 @@
+ 		qcom,mdss-dsi-dma-trigger = "trigger_sw";
+ 		qcom,mdss-dsi-mdp-trigger = "none";
+ 		qcom,mdss-dsi-reset-sequence = <1 1>, <0 1>, <1 10>;
+-		qcom,mdss-pan-physical-width-dimension = <71>;
+-		qcom,mdss-pan-physical-height-dimension = <154>;
++		qcom,mdss-pan-physical-width-dimension = <710>;
++		qcom,mdss-pan-physical-height-dimension = <1537>;
+ 		qcom,mdss-dsi-te-pin-select = <1>;
+ 		qcom,mdss-dsi-wr-mem-start = <0x2c>;
+ 		qcom,mdss-dsi-wr-mem-continue = <0x3c>;
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j3s-37-02-0a-dsc-video.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j3s-37-02-0a-dsc-video.dtsi
+index 1d60d5491f61..8d04aff773a4 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j3s-37-02-0a-dsc-video.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-j3s-37-02-0a-dsc-video.dtsi
+@@ -42,8 +42,8 @@
+ 		qcom,mdss-dsi-dma-trigger = "trigger_sw";
+ 		qcom,mdss-dsi-mdp-trigger = "none";
+ 		qcom,mdss-dsi-reset-sequence = <1 2>, <0 10>, <1 5>, <0 1>, <1 10>;
+-		qcom,mdss-pan-physical-width-dimension = <70>;
+-		qcom,mdss-pan-physical-height-dimension = <155>;
++		qcom,mdss-pan-physical-width-dimension = <695>;
++		qcom,mdss-pan-physical-height-dimension = <1544>;
+ 		qcom,mdss-dsi-tx-eot-append;
+ 		qcom,bl-update-flag = "delay_until_first_frame";
+ 		qcom,disp-panel-offon-mode-enabled;
+@@ -52,11 +52,11 @@
+ 			17000 15500 30000 8000 3000>;
+ 		qcom,mdss-dsi-panel-peak-brightness = <4200000>;
+ 		qcom,mdss-dsi-panel-blackness-level = <3230>;
+-		qcom,mdss-dsi-qsync-min-refresh-rate = <60>;
++		//qcom,mdss-dsi-qsync-min-refresh-rate = <60>;
+ 		qcom,mdss-dsi-pan-enable-dynamic-fps;
+ 		qcom,mdss-dsi-pan-fps-update =
+ 				"dfps_immediate_porch_mode_vfp";
+-		qcom,dsi-supported-dfps-list = <144 120 90 60>;
++		qcom,dsi-supported-dfps-list = <144 120 90 60 50 48 30>;
+ 
+ 		qcom,mdss-dsi-display-timings {
+ 			timing@0{
+@@ -229,7 +229,7 @@
+ 	mi,esd-err-irq-gpio = <&tlmm 51 0x2002>; /* trig-flags: falling-0x0002 rasing-0x0001*/
+ 	mi,mdss-dsi-panel-xy-coordinate = <0x6 0x18>;
+ 	mi,mdss-dsi-panel-max-luminance = <0x6 0x4>;
+-	// mi,mdss-dsi-pan-enable-smart-fps;
++	mi,mdss-dsi-pan-enable-smart-fps;
+ 
+ 	qcom,mdss-dsi-display-timings {
+ 		timing@0{
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-k11a-38-08-0a-dsc-cmd.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-k11a-38-08-0a-dsc-cmd.dtsi
+index ef4fa120cd78..e28e44409225 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-k11a-38-08-0a-dsc-cmd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-k11a-38-08-0a-dsc-cmd.dtsi
+@@ -24,8 +24,8 @@
+ 		qcom,mdss-dsi-mdp-trigger = "none";
+ 		qcom,mdss-dsi-reset-sequence = <0 12>, <1 10>;
+ 		qcom,mdss-dsi-reset-powerdown-delay = <10>;
+-		qcom,mdss-pan-physical-width-dimension = <70>;
+-		qcom,mdss-pan-physical-height-dimension = <155>;
++		qcom,mdss-pan-physical-width-dimension = <695>;
++		qcom,mdss-pan-physical-height-dimension = <1546>;
+ 		qcom,mdss-dsi-te-pin-select = <1>;
+ 		qcom,mdss-dsi-wr-mem-start = <0x2c>;
+ 		qcom,mdss-dsi-wr-mem-continue = <0x3c>;
+@@ -500,8 +500,8 @@
+ 	mi,mdss-dsi-panel-hbm-off-51-index = <1>;
+ 	mi,esd-err-irq-gpio = <&tlmm 51 0x2001>;
+ 	mi,mdss-panel-on-dimming-delay = <120>;
+-	// mi,mdss-dsi-pan-enable-smart-fps;
+-	// mi,mdss-dsi-smart-fps-max_framerate = <120>;
++	mi,mdss-dsi-pan-enable-smart-fps;
++	mi,mdss-dsi-smart-fps-max_framerate = <120>;
+ 	mi,mdss-dsi-panel-hbm-brightness = <1>;
+ 	mi,mdss-dsi-panel-dc-threshold = <440>;
+ 	mi,mdss-dsi-panel-max-brightness-clone = <8191>;
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-k81-35-02-0b-video.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-k81-35-02-0b-video.dtsi
+index 619532adb9e3..83d358380c9e 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-k81-35-02-0b-video.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-k81-35-02-0b-video.dtsi
+@@ -365,7 +365,7 @@
+ 	mi,esd-err-irq-gpio = <&tlmm 51 0x2002>; /* trig-flags: falling-0x0002 rasing-0x0001*/
+ 	mi,mdss-dsi-panel-xy-coordinate = <0x6 0x18>;
+ 	mi,mdss-dsi-panel-max-luminance = <0x6 0x4>;
+-	// mi,mdss-dsi-pan-enable-smart-fps;
++	mi,mdss-dsi-pan-enable-smart-fps;
+ 	mi,mdss-panel-idle-fps = <60>;
+ 
+ 	qcom,mdss-dsi-display-timings {
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-k81-42-02-0a-video.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-k81-42-02-0a-video.dtsi
+index cdc7626db75e..fb314892afe5 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-k81-42-02-0a-video.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-k81-42-02-0a-video.dtsi
+@@ -337,7 +337,7 @@
+ 	mi,esd-err-irq-gpio = <&tlmm 51 0x2002>; /* trig-flags: falling-0x0002 rasing-0x0001*/
+ 	mi,mdss-dsi-panel-xy-coordinate = <0x6 0x18>;
+ 	mi,mdss-dsi-panel-max-luminance = <0x6 0x4>;
+-	// mi,mdss-dsi-pan-enable-smart-fps;
++	mi,mdss-dsi-pan-enable-smart-fps;
+ 	mi,mdss-panel-idle-fps = <60>;
+ 
+ 	qcom,mdss-dsi-display-timings {
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-l11r-38-08-0a-dsc-cmd.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-l11r-38-08-0a-dsc-cmd.dtsi
+index ac3af3245698..bd93c79787b2 100755
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-l11r-38-08-0a-dsc-cmd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-l11r-38-08-0a-dsc-cmd.dtsi
+@@ -24,8 +24,8 @@
+ 		qcom,mdss-dsi-mdp-trigger = "none";
+ 		qcom,mdss-dsi-reset-sequence = <0 12>, <1 10>;
+ 		qcom,mdss-dsi-reset-powerdown-delay = <10>;
+-		qcom,mdss-pan-physical-width-dimension = <70>;
+-		qcom,mdss-pan-physical-height-dimension = <155>;
++		qcom,mdss-pan-physical-width-dimension = <695>;
++		qcom,mdss-pan-physical-height-dimension = <1546>;
+ 		qcom,mdss-dsi-te-pin-select = <1>;
+ 		qcom,mdss-dsi-wr-mem-start = <0x2c>;
+ 		qcom,mdss-dsi-wr-mem-continue = <0x3c>;
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-sim-dualmipi-cmd.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-sim-dualmipi-cmd.dtsi
+index 6407ef2d75b2..bddaf37f0522 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-sim-dualmipi-cmd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-sim-dualmipi-cmd.dtsi
+@@ -35,7 +35,7 @@
+ 		qcom,mdss-dsi-te-using-wd;
+ 		qcom,mdss-dsi-te-using-te-pin;
+ 		qcom,panel-ack-disabled;
+-		qcom,mdss-dsi-qsync-min-refresh-rate = <45>;
++		//qcom,mdss-dsi-qsync-min-refresh-rate = <45>;
+ 
+ 		qcom,mdss-dsi-display-timings {
+ 			timing@0 {
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-sim-dualmipi-video.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-sim-dualmipi-video.dtsi
+index 9121f2cb8750..f44bb450ace8 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-sim-dualmipi-video.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-sim-dualmipi-video.dtsi
+@@ -24,7 +24,7 @@
+ 		qcom,mdss-dsi-mdp-trigger = "none";
+ 		qcom,mdss-dsi-reset-sequence = <1 20>, <0 200>, <1 20>;
+ 		qcom,panel-ack-disabled;
+-		qcom,mdss-dsi-qsync-min-refresh-rate = <45>;
++		//qcom,mdss-dsi-qsync-min-refresh-rate = <45>;
+ 
+ 		qcom,mdss-dsi-display-timings {
+ 			timing@0 {
+diff --git a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-sw43404-amoled-dsc-wqhd-cmd.dtsi b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-sw43404-amoled-dsc-wqhd-cmd.dtsi
+index 1c08e1931f81..0652558562d0 100644
+--- a/arch/arm64/boot/dts/vendor/qcom/dsi-panel-sw43404-amoled-dsc-wqhd-cmd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/dsi-panel-sw43404-amoled-dsc-wqhd-cmd.dtsi
+@@ -36,7 +36,7 @@
+ 			17000 15500 30000 8000 3000>;
+ 		qcom,mdss-dsi-panel-peak-brightness = <4200000>;
+ 		qcom,mdss-dsi-panel-blackness-level = <3230>;
+-		qcom,mdss-dsi-qsync-min-refresh-rate = <55>;
++		//qcom,mdss-dsi-qsync-min-refresh-rate = <55>;
+ 
+ 		qcom,mdss-dsi-display-timings {
+ 			timing@0 {
