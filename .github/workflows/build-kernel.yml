@@ -163,6 +163,7 @@ jobs:
             bc bison build-essential ccache cpio curl device-tree-compiler flex \
             git libelf-dev libssl-dev lz4 make python3 rsync unzip zip zstd \
             libncurses-dev
+          sudo apt-get remove -y --purge libyaml-dev
           mkdir -p "$WORKSPACE"
 
       - name: Set up toolchain
