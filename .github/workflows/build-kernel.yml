@@ -6,6 +6,11 @@ on:
     # worth changing per-run. Everything else lives in the config file selected
     # by `config`, so a fork can keep one profile per device.
     inputs:
+      ubuntu_version:
+        description: "Ubuntu version to build kernel on"
+        required: true
+        default: "latest"
+        type: string
       config:
         description: "Config file to build (path, relative to the repo root)"
         required: false
@@ -76,6 +81,7 @@ on:
 
   workflow_call:
     inputs:
+      ubuntu_version:  { required: true,  default: "latest",     type: string }
       config:          { required: false, default: "config.env", type: string }
       ksu_variant:     { required: false, default: "config",     type: string }
       ksu_ref:         { required: false, default: "",           type: string }
@@ -98,7 +104,7 @@ permissions:
 jobs:
   build:
     name: Build ${{ inputs.config }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-${{ inputs.ubuntu_version }}
     timeout-minutes: 120
     outputs:
       device: ${{ steps.meta.outputs.device }}
@@ -163,6 +169,7 @@ jobs:
             bc bison build-essential ccache cpio curl device-tree-compiler flex \
             git libelf-dev libssl-dev lz4 make python3 rsync unzip zip zstd \
             libncurses-dev
+          sudo apt-get remove -y --purge libyaml-dev
           mkdir -p "$WORKSPACE"
 
       - name: Set up toolchain
