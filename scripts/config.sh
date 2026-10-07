@@ -72,6 +72,7 @@ declare -A DEFAULTS=(
 	[ENABLE_STOCKCONFIG]="false"
 	[STOCKCONFIG_FLAGS]="-vts _stock"
 	[STOCKCONFIG_MAKEFILE]="kernel/Makefile"
+	[ENABLE_CUSTOM_PATCHES]="false"
 
 	# Kconfig tweaks
 	[ADD_KPROBES_CONFIG]="false"

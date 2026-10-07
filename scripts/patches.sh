@@ -497,6 +497,23 @@ droidspaces_apply() {
 	endgroup
 }
 
+# =============================================================== Custom Patches
+
+# Also modifies ${KERNEL_DIR}/scripts/setlocalversion to remove "-dirty"
+custom_apply() {
+	cd "$KERNEL_DIR"
+	group "Applying custom patches"
+	for patch in "${REPO_ROOT}"/patches/*.patch; do
+		[ -f "${patch}" ] || continue
+		apply_patch "${patch}" 1 || warn "Custom patch ${patch} did not apply cleanly, continuing"
+	done
+	if [ -f "${KERNEL_DIR}/scripts/setlocalversion" ]; then
+		sed -i 's/-dirty//g' "${KERNEL_DIR}/scripts/setlocalversion"
+	fi
+
+	endgroup
+}
+
 # --------------------------------------------------------------------- main ---
 
 if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
@@ -507,6 +524,7 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
 		hooks)        hooks_patch_apply ;;
 		kpm)          kpm_patch_image "$2" ;;
 		droidspaces)  droidspaces_apply ;;
+		custom)       custom_apply ;;
 		all)
 			# Order matters and this is the tested one (4.19 + SukiSU builtin
 			# + SUSFS 1.5.5, no rejects):
@@ -525,6 +543,7 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
 			if is_true "${ENABLE_SUSFS:-false}";      then susfs_apply;      fi
 			if is_true "${ENABLE_HIDE_STUFF:-false}"; then hide_stuff_apply; fi
 			if is_true "${ENABLE_DROIDSPACES:-false}"; then droidspaces_apply; fi
+			if is_true "${ENABLE_CUSTOM_PATCHES:-false}"; then custom_apply; fi
 			;;
 		*) die "unknown patch step '$1'" ;;
 	esac
