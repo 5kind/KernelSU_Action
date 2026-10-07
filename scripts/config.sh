@@ -69,6 +69,9 @@ declare -A DEFAULTS=(
 	[DROIDSPACES_REPO]="https://github.com/ravindu644/Droidspaces-OSS.git"
 	[DROIDSPACES_BRANCH]="v6.6.0"
 	[DROIDSPACES_PATCHES_ROOT]="Documentation/resources/kernel-patches"
+	[ENABLE_STOCKCONFIG]="false"
+	[STOCKCONFIG_FLAGS]="-vts _stock"
+	[STOCKCONFIG_MAKEFILE]="kernel/Makefile"
 
 	# Kconfig tweaks
 	[ADD_KPROBES_CONFIG]="false"
