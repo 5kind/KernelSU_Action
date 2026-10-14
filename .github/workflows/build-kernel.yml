@@ -86,6 +86,7 @@ on:
       kpm:             { required: false, default: "config",     type: string }
       extra_defconfig: { required: false, default: "",           type: string }
       publish_release: { required: false, default: false,        type: boolean }
+  push:
 
 # Only one build per ref at a time; a newer run supersedes an older one.
 concurrency:
@@ -125,6 +126,47 @@ jobs:
       IN_EXTRA_DEFCONFIG: ${{ inputs.extra_defconfig }}
 
     steps:
+      - name: Wait for CI (shellcheck) to pass
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for _ in {1..60}; do
+            gh api \
+              "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$SHA&per_page=5" \
+              > /tmp/ci-runs.json
+
+            read -r STATUS CONCLUSION < <(python3 - "$SHA" <<'PY'
+          import json, sys
+          runs = json.load(open("/tmp/ci-runs.json"))["workflow_runs"]
+          for r in runs:
+              if r.get("head_sha") == sys.argv[1]:
+                  print(r.get("status", ""), r.get("conclusion", ""))
+                  break
+          else:
+              print("missing missing")
+          PY
+          )
+
+            echo "CI: status=$STATUS conclusion=$CONCLUSION"
+
+            case "$STATUS" in
+              completed)
+                [[ "$CONCLUSION" == "success" ]] && exit 0
+                echo "CI failed; aborting build."
+                exit 1
+                ;;
+            esac
+            sleep 15
+          done
+
+          echo "Timed out waiting for CI."
+          exit 1
+
       - uses: actions/checkout@v4
 
       - name: Resolve configuration
@@ -244,7 +286,7 @@ jobs:
   release:
     name: Publish release
     needs: build
-    if: inputs.publish_release
+    if: ${{ github.event_name == 'push' || inputs.publish_release }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -277,6 +319,7 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8 # v2.3.2
         with:
+          prerelease: true
           tag_name: ${{ needs.build.outputs.device }}-${{ needs.build.outputs.build_time }}
           name: ${{ needs.build.outputs.device }} · ${{ needs.build.outputs.ksu_name }} · ${{ needs.build.outputs.build_time }}
           body: |
@@ -289,3 +332,22 @@ jobs:
 
             Flash the AnyKernel3 zip from a custom recovery.
           files: release/*
+  restore-nightly-monitor:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+
+    steps:
+      - name: Re-enable nightly monitoring
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH_NAME: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          WORKFLOW_FILE="${BRANCH_NAME}.yml"
+
+          gh api \
+            --method PUT \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/$WORKFLOW_FILE/enable"
