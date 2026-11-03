@@ -11,6 +11,9 @@ scripts/config --file arch/arm64/configs/${DEVICE}_defconfig \
     -d CONFIG_ANDROID_SIMPLE_LMK \
     -d CONFIG_ANDROID_LOW_MEMORY_KILLER \
     \
+    --set-str CONFIG_CMDLINE "ramoops_memreserve=4M" \
+    -e CONFIG_CMDLINE_EXTEND \
+    \
     -e CONFIG_BINFMT_MISC \
     -e CONFIG_KSU \
     -e CONFIG_KSU_MANUAL_HOOK \
